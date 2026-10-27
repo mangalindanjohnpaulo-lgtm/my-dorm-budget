@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Dorm Budget</title>
+<style>
+:root{--bg:#f5f7f4;--card:#fff;--ink:#202820;--muted:#697469;--line:#e3e9e1;--green:#26734d;--green2:#e3f3e9;--orange:#a65b19;--red:#b53b3b;--shadow:0 8px 24px rgba(30,60,40,.06)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+.wrap{max-width:1050px;margin:auto;padding:22px 16px 48px}.top{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:20px}.eyebrow{color:var(--green);font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}.top h1{font-size:clamp(27px,5vw,38px);line-height:1.1;margin:5px 0 8px}.sub{color:var(--muted);max-width:660px}.pill{border-radius:999px;padding:7px 11px;background:var(--green2);color:var(--green);font-weight:700;font-size:12px;white-space:nowrap}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0}.card,.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:17px;box-shadow:var(--shadow)}.metric-label{color:var(--muted);font-size:12px;font-weight:650}.metric{font-size:clamp(21px,3vw,29px);font-weight:800;letter-spacing:-.04em;margin:7px 0 3px}.hint{color:var(--muted);font-size:12px}.green{color:var(--green)}.orange{color:var(--orange)}.red{color:var(--red)}
+.layout{display:grid;grid-template-columns:1.05fr .95fr;gap:14px}.panel h2{font-size:18px;margin:0 0 14px}.panel h3{font-size:14px;margin:16px 0 8px}.field{display:flex;flex-direction:column;gap:5px;margin-bottom:11px}.field label{font-size:12px;color:var(--muted);font-weight:700}.field input,.field select,.field textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);font:inherit;min-width:0}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}.btn{border:0;border-radius:11px;padding:11px 14px;font:inherit;font-weight:750;cursor:pointer;background:var(--green);color:white}.btn.secondary{background:#edf2ed;color:var(--ink);border:1px solid var(--line)}.btn.danger{background:#fff0f0;color:var(--red);border:1px solid #f2d0d0}.btnrow{display:flex;flex-wrap:wrap;gap:8px}.bar{height:9px;background:#edf1ed;border-radius:999px;overflow:hidden;margin:8px 0 5px}.bar>span{display:block;height:100%;background:var(--green);border-radius:999px;width:0%;transition:width .2s}.bar.orangebar>span{background:#d08b3d}.month-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.month{border:1px solid var(--line);border-radius:13px;padding:12px;text-align:left;background:#fff;cursor:pointer;color:var(--ink)}.month.active{border-color:var(--green);background:var(--green2)}.month strong{display:block;font-size:13px}.month span{display:block;color:var(--muted);font-size:12px;margin-top:4px}.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:10px 7px;border-bottom:1px solid var(--line);white-space:nowrap}th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em}td:last-child,th:last-child{text-align:right}.empty{text-align:center;color:var(--muted);padding:22px 8px}.small{font-size:12px;color:var(--muted)}.split{display:flex;justify-content:space-between;gap:12px;align-items:center}.category-row{margin:12px 0}.category-row .split{font-size:13px}.notice{background:#fff8e9;border:1px solid #f1dfb8;border-radius:12px;padding:12px;color:#79511f;font-size:13px;margin:14px 0}.foot{font-size:12px;color:var(--muted);margin:18px 2px}.hidden{display:none!important}.budget-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}.mini-graph-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:7px;align-items:start}.mini-graph-card{min-width:0;border:1px solid var(--line);border-radius:12px;padding:7px 4px 8px;text-align:center;background:#fff;overflow:hidden}.mini-graph-card h3{font-size:11px;line-height:1.2;margin:0 0 3px;white-space:nowrap}.mini-chart svg{display:block;width:100%;height:auto;max-width:116px;margin:0 auto}.mini-caption{font-size:9px;color:var(--muted);line-height:1.2;overflow-wrap:anywhere}.mini-overview-panel .field input{padding:7px 8px;font-size:12px}.mini-overview-panel .field label{font-size:11px}.mini-slice{animation:miniPop .7s cubic-bezier(.2,.8,.2,1) both;transform-origin:50px 44px}.mini-graph-card svg circle,.mini-graph-card svg path{transition:opacity .2s,filter .2s}.mini-graph-card svg circle:hover,.mini-graph-card svg path:hover{opacity:.8;filter:brightness(1.08)}@keyframes miniPop{from{opacity:.15;transform:scale(.75) rotate(-15deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+.graph-grid{display:grid;grid-template-columns:1fr;gap:14px}.graph-card{border:1px solid var(--line);border-radius:14px;padding:13px;background:#fff}.graph-card h3{margin:0 0 6px}.graph-card svg{display:block;width:100%;height:auto}.slice{transform-origin:150px 130px;animation:sliceIn .85s cubic-bezier(.2,.8,.2,1) both}.graph-card svg path{transition:opacity .25s,filter .25s}.graph-card svg path:hover{opacity:.82;filter:brightness(1.06)}@keyframes sliceIn{from{opacity:.2;transform:scale(.82) rotate(-8deg)}to{opacity:1;transform:scale(1) rotate(0)}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+@media(max-width:760px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.layout{grid-template-columns:1fr}.top{display:block}.pill{display:inline-block;margin-top:6px}.month-list{grid-template-columns:repeat(2,minmax(0,1fr))}.wrap{padding:18px 12px 36px}}
+
+/* Mobile-first bottom tab navigation */
+.tab-panels{min-height:45vh}.tab-panel{display:none;animation:tabFade .22s ease both}.tab-panel.active{display:block}.tab-panel>.panel{margin:0 0 14px!important}.tab-panel>.cards{margin-top:0}.tabbar{position:fixed;z-index:1000;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;padding:8px 7px calc(8px + env(safe-area-inset-bottom));background:rgba(255,255,255,.96);border-top:1px solid var(--line);box-shadow:0 -6px 22px rgba(20,40,25,.10);backdrop-filter:blur(12px)}.tab-btn{min-width:0;border:0;background:transparent;color:var(--muted);border-radius:12px;padding:7px 2px 6px;font:inherit;font-size:10px;font-weight:750;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer}.tab-btn .tab-icon{font-size:19px;line-height:1.1}.tab-btn.active{background:var(--green2);color:var(--green)}body{padding-bottom:calc(82px + env(safe-area-inset-bottom))}.wrap{padding-bottom:18px}.tab-panel .graph-grid{grid-template-columns:1fr}.mini-graph-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.mini-graph-card{padding:6px 3px}.tab-panel .formgrid,.tab-panel .budget-grid{grid-template-columns:1fr 1fr}@keyframes tabFade{from{opacity:.35;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+@media(min-width:761px){.wrap{padding-bottom:28px}.tabbar{left:50%;right:auto;transform:translateX(-50%);width:min(680px,calc(100% - 32px));bottom:16px;border:1px solid var(--line);border-radius:18px;padding:8px;box-shadow:0 8px 30px rgba(20,40,25,.15)}body{padding-bottom:110px}.tab-btn{font-size:12px;flex-direction:row;gap:7px}.tab-btn .tab-icon{font-size:17px}}
+@media(max-width:390px){.tab-btn{font-size:9px}.tab-btn .tab-icon{font-size:17px}.card,.panel{padding:13px}.metric{font-size:21px}.tab-panel .formgrid,.tab-panel .budget-grid{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.tab-panel{animation:none}}
+
+</style>
+
+  <meta name="theme-color" content="#26734d">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="My Dorm Budget">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div><div class="eyebrow">Your personal budget</div><h1>My Dorm Budget</h1><div class="sub">Track every peso from November 2026 to April 2027. Log expenses and any income you actually receive.</div></div>
+    <div class="pill">PHP · 6-month plan</div>
+  </header>
+  <section class="cards">
+    <div class="card"><div class="metric-label">Cash balance</div><div class="metric" id="balance">₱35,000</div><div class="hint">Starting cash + received income − expenses</div></div>
+    <div class="card"><div class="metric-label">Safe to spend</div><div class="metric green" id="safe">₱25,000</div><div class="hint">After protecting ₱10,000 emergency savings</div></div>
+    <div class="card"><div class="metric-label">Total expenses</div><div class="metric" id="spent">₱0</div><div class="hint" id="expenseCount">0 transactions logged</div></div>
+  </section>
+
+  <div class="layout">
+    <div>
+      <section class="panel">
+        <h2>Log a transaction</h2>
+        <form id="txnForm">
+          <div class="formgrid">
+            <div class="field"><label for="type">Transaction</label><select id="type"><option value="expense">Expense</option><option value="income">Income received</option></select></div>
+            <div class="field"><label for="amount">Amount (₱)</label><input id="amount" type="number" min="1" step="0.01" placeholder="e.g. 120" required></div>
+            <div class="field"><label for="category">Category</label><select id="category"><option>Food</option><option>Electricity</option><option>Wi-Fi</option><option>Water</option><option>Miscellaneous</option><option>Other</option></select></div>
+            <div class="field"><label for="date">Date</label><input id="date" type="date" min="2026-11-01" max="2027-04-30" value="2026-11-01" required></div>
+          </div>
+          <div class="field"><label for="note">Note (optional)</label><input id="note" type="text" maxlength="90" placeholder="e.g. lunch, groceries, monthly Wi-Fi"></div>
+          <div class="btnrow"><button class="btn" type="submit">＋ Add transaction</button></div>
+        </form>
+      </section>
+
+      <section class="panel mini-overview-panel" style="margin-top:14px">
+        <div class="split"><h2 style="margin:0">Spending at a glance</h2><span class="small">Tap Graphs for details</span></div>
+        <div class="field" style="margin:9px 0 5px"><label for="dailyDateOverview">Daily graph date</label><input id="dailyDateOverview" type="date" min="2026-11-01" max="2027-04-30" value="2026-11-01"></div>
+        <div class="mini-graph-grid">
+          <div class="mini-graph-card"><h3>Daily</h3><div id="miniDailyGraph" class="mini-chart"></div><div class="mini-caption" id="miniDailyCaption">Selected day</div></div>
+          <div class="mini-graph-card"><h3>Monthly</h3><div id="miniMonthlyGraph" class="mini-chart"></div><div class="mini-caption" id="miniMonthlyCaption">Selected month</div></div>
+          <div class="mini-graph-card"><h3>Totality</h3><div id="miniTotalGraph" class="mini-chart"></div><div class="mini-caption">All 6 months</div></div>
+        </div>
+      </section>
+
+      <section class="panel" style="margin-top:14px">
+        <div class="split"><h2 style="margin:0">Monthly overview</h2><div class="small">Select a month</div></div>
+        <div class="month-list" id="monthList" style="margin-top:13px"></div>
+        <div style="margin-top:17px">
+          <div class="split"><strong id="selectedTitle">November 2026</strong><strong id="monthTotal">₱0 spent</strong></div>
+          <div class="bar"><span id="monthBar"></span></div>
+          <div class="split small"><span id="monthBudgetText">Planned budget: ₱7,475</span><span id="monthRemaining">₱7,475 left</span></div>
+        </div>
+        <h3>Category spending this month</h3>
+        <div id="categoryBreakdown"></div>
+      </section>
+
+      <section class="panel" style="margin-top:14px">
+        <div class="split"><h2 style="margin:0">Spending circle graphs</h2><span class="small">Animated · updates automatically</span></div>
+        <div class="field" style="margin-top:12px"><label for="dailyDate">Daily graph — choose a date</label><input id="dailyDate" type="date" min="2026-11-01" max="2027-04-30" value="2026-11-01"></div>
+        <div class="graph-grid">
+          <div class="graph-card"><h3>Daily spending</h3><div class="small" id="dailyGraphCaption">Spending by category on the selected day</div><div id="dailyGraph"></div></div>
+          <div class="graph-card"><h3>Monthly spending</h3><div class="small" id="monthlyGraphCaption">Spending by category in the selected month</div><div id="monthlyGraph"></div></div>
+          <div class="graph-card"><h3>Totality — all six months</h3><div class="small">All expenses recorded from November 2026 to April 2027</div><div id="totalGraph"></div></div>
+        </div>
+        <p class="small">Each circle shows how your spending is divided between categories. The middle shows the total for that period. Hover over a slice for a subtle highlight.</p>
+      </section>
+    </div>
+
+    <div>
+      <section class="panel">
+        <h2>Customize your budgets</h2>
+        <p class="small">Change these allocations any time. Your monthly budget totals and graph comparisons update automatically.</p>
+        <form id="budgetForm">
+          <h3>Money & savings targets</h3>
+          <div class="budget-grid">
+            <div class="field"><label for="startCashInput">Starting cash (₱)</label><input id="startCashInput" type="number" min="0" step="100" value="35000"></div>
+            <div class="field"><label for="reserveInput">Emergency reserve (₱)</label><input id="reserveInput" type="number" min="0" step="100" value="10000"></div>
+          </div>
+          <h3>Regular monthly allocations</h3>
+          <div class="budget-grid">
+            <div class="field"><label for="foodBudget">Food (₱)</label><input id="foodBudget" type="number" min="0" step="50" value="6000"></div>
+            <div class="field"><label for="electricBudget">Electricity (₱)</label><input id="electricBudget" type="number" min="0" step="25" value="500"></div>
+            <div class="field"><label for="wifiBudget">Wi-Fi (₱)</label><input id="wifiBudget" type="number" min="0" step="25" value="400"></div>
+            <div class="field"><label for="waterBudget">Water (₱)</label><input id="waterBudget" type="number" min="0" step="25" value="125"></div>
+            <div class="field"><label for="miscBudget">Miscellaneous (₱)</label><input id="miscBudget" type="number" min="0" step="25" value="450"></div>
+          </div>
+          <h3>December (half-month) allocations</h3>
+          <div class="budget-grid">
+            <div class="field"><label for="decFoodBudget">Food (₱)</label><input id="decFoodBudget" type="number" min="0" step="50" value="3000"></div>
+            <div class="field"><label for="decMiscBudget">Miscellaneous (₱)</label><input id="decMiscBudget" type="number" min="0" step="25" value="225"></div>
+          </div>
+          <div class="btnrow"><button class="btn" type="submit">Save budget allocations</button><button class="btn secondary" type="button" id="defaultBudgets">Restore original budgets</button></div>
+        </form>
+        <div class="notice" style="margin-bottom:0">Your monthly budget is calculated from the category allocations above. December uses your special half-month food and miscellaneous amounts, while utilities stay at the regular allocations.</div>
+        <h3>Selected month budget progress</h3><div id="budgetProgress"></div>
+      </section>
+      <section class="panel" style="margin-top:14px">
+        <div class="split"><h2 style="margin:0">Recent transactions</h2><select id="filterMonth" style="width:auto;padding:7px;border:1px solid var(--line);border-radius:9px"><option value="all">All months</option><option value="2026-11">Nov 2026</option><option value="2026-12">Dec 2026</option><option value="2027-01">Jan 2027</option><option value="2027-02">Feb 2027</option><option value="2027-03">Mar 2027</option><option value="2027-04">Apr 2027</option></select></div>
+        <div class="tablewrap" style="margin-top:10px"><table><thead><tr><th>Date / note</th><th>Category</th><th>Amount</th><th></th></tr></thead><tbody id="txnRows"></tbody></table><div id="empty" class="empty">No transactions yet. Add your first expense above.</div></div>
+        <div class="btnrow" style="margin-top:14px"><button class="btn secondary" type="button" id="exportBtn">Export backup</button><button class="btn secondary" type="button" id="importBtn">Restore backup</button><input id="importFile" class="hidden" type="file" accept="application/json"><button class="btn danger" type="button" id="resetBtn">Reset tracker</button></div>
+      </section>
+    </div>
+  </div>
+  <p class="foot">Your entries are saved in this browser on this device. Export a backup regularly so you can restore your data if browser storage is cleared. This tracker does not connect to your bank or send your transactions anywhere.</p>
+</div>
+<script>
+// Build touch-friendly bottom tabs and move each section into its own screen.
+(function setupTabs(){
+ const layout=document.querySelector('.layout'); if(!layout) return;
+ const allSections=[...layout.querySelectorAll('section.panel')];
+ const findSection=(starts)=>allSections.find(sec=>{const h=sec.querySelector('h2');return h&&starts.some(t=>h.textContent.trim().startsWith(t));});
+ const log=findSection(['Log a transaction']);
+ const overview=findSection(['Monthly overview']);
+ const miniGraphs=findSection(['Spending at a glance']);
+ const graphs=findSection(['Spending circle graphs']);
+ const budgets=findSection(['Customize your budgets']);
+ const history=findSection(['Recent transactions']);
+ const cards=document.querySelector('.cards');
+ const tabs=[
+  {id:'overview',label:'Overview',icon:'⌂',nodes:[cards,miniGraphs,overview]},
+  {id:'add',label:'Add',icon:'＋',nodes:[log]},
+  {id:'graphs',label:'Graphs',icon:'◔',nodes:[graphs]},
+  {id:'budgets',label:'Budgets',icon:'⚙',nodes:[budgets]},
+  {id:'history',label:'History',icon:'▤',nodes:[history]}
+ ];
+ const panels=document.createElement('div');panels.className='tab-panels';panels.id='tabPanels';
+ tabs.forEach((tab,i)=>{const panel=document.createElement('section');panel.className='tab-panel'+(i===0?' active':'');panel.id='tab-'+tab.id;panel.setAttribute('aria-label',tab.label);tab.nodes.filter(Boolean).forEach(n=>panel.appendChild(n));panels.appendChild(panel);});
+ layout.replaceWith(panels);
+ const nav=document.createElement('nav');nav.className='tabbar';nav.setAttribute('aria-label','Main navigation');nav.innerHTML=tabs.map((t,i)=>'<button type="button" class="tab-btn'+(i===0?' active':'')+'" data-tab="'+t.id+'" aria-controls="tab-'+t.id+'" aria-selected="'+(i===0?'true':'false')+'"><span class="tab-icon" aria-hidden="true">'+t.icon+'</span><span>'+t.label+'</span></button>').join('');
+ document.body.appendChild(nav);
+ function activate(id){tabs.forEach(t=>{const active=t.id===id;document.getElementById('tab-'+t.id).classList.toggle('active',active);const b=nav.querySelector('[data-tab="'+t.id+'"]');b.classList.toggle('active',active);b.setAttribute('aria-selected',String(active));});window.scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});}
+ nav.addEventListener('click',e=>{const b=e.target.closest('[data-tab]');if(b)activate(b.dataset.tab);});
+})();
+(function(){
+const KEY='myDormBudget_v1';
+const defaults={startCash:35000,reserve:10000,food:6000,electricity:500,wifi:400,water:125,misc:450,decFood:3000,decMisc:225};
+let config={...defaults};
+const months=[
+ {key:'2026-11',label:'November 2026'},{key:'2026-12',label:'December 2026'},
+ {key:'2027-01',label:'January 2027'},{key:'2027-02',label:'February 2027'},
+ {key:'2027-03',label:'March 2027'},{key:'2027-04',label:'April 2027'}
+];
+const fixedCats=['Food','Electricity','Wi-Fi','Water','Miscellaneous','Other'];
+const colors=['#26734d','#d28b36','#4f83cc','#7b61a8','#d45f65','#7a8580'];
+let state={transactions:[],selected:'2026-11',received:false,dailyDate:'2026-11-01'};
+const $=id=>document.getElementById(id);
+const money=n=>new Intl.NumberFormat('en-PH',{style:'currency',currency:'PHP',maximumFractionDigits:2}).format(n).replace('PHP','₱').replace(/\s/g,'');
+const read=()=>{try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&Array.isArray(s.transactions)){state={...state,...s};if(s.config){config={...defaults,...s.config};delete config.expectedIncome;}}}catch(e){}}
+const save=()=>localStorage.setItem(KEY,JSON.stringify({...state,config}));
+const isIncome=t=>t.type==='income';const expenses=()=>state.transactions.filter(t=>!isIncome(t));
+const total=arr=>arr.reduce((sum,t)=>sum+Number(t.amount||0),0);const monthOf=d=>d.slice(0,7);
+const currentMonth=()=>months.find(m=>m.key===state.selected)||months[0];
+const catSpend=(filter,cat)=>total(expenses().filter(t=>(!filter||filter(t))&&t.category===cat));
+const monthBudget=m=>m.key==='2026-12'?config.decFood+config.electricity+config.wifi+config.water+config.decMisc:config.food+config.electricity+config.wifi+config.water+config.misc;
+const categoryBudget=(m,cat)=>({Food:m.key==='2026-12'?config.decFood:config.food,Electricity:config.electricity,'Wi-Fi':config.wifi,Water:config.water,Miscellaneous:m.key==='2026-12'?config.decMisc:config.misc,Other:0}[cat]||0);
+const spendMonth=key=>total(expenses().filter(t=>monthOf(t.date)===key));
+function setBar(id,amount,budget){const el=$(id);if(!el)return;el.style.width=Math.min(100,budget?amount/budget*100:0)+'%';el.parentElement.classList.toggle('orangebar',amount>budget*.8&&amount<=budget);el.parentElement.classList.toggle('redbar',amount>budget);el.style.background=amount>budget?'#b53b3b':'';}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function svgText(x,y,text,attrs=''){return '<text x="'+x+'" y="'+y+'" '+attrs+'>'+escapeHtml(text)+'</text>';}
+function donutGraph(targetId,captionId,caption,filter){
+ const vals=fixedCats.map((name,i)=>({name,val:catSpend(filter,name),color:colors[i]}));
+ const sum=vals.reduce((a,v)=>a+v.val,0),W=340,H=250,cx=150,cy=122,r=82,inner=49;
+ let svg='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+escapeHtml(caption)+'" style="font-family:system-ui,sans-serif">';
+ if(sum<=0){svg+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="#edf1ed"/><circle cx="'+cx+'" cy="'+cy+'" r="'+inner+'" fill="white"/>'+svgText(cx,cy-2,'₱0','font-size="18" font-weight="750" fill="#202820" text-anchor="middle"')+svgText(cx,cy+16,'spent','font-size="11" fill="#697469" text-anchor="middle"');}
+ else {let a=-Math.PI/2;vals.forEach((v,i)=>{if(v.val<=0)return;const sweep=v.val/sum*Math.PI*2,b=a+sweep,x1=cx+r*Math.cos(a),y1=cy+r*Math.sin(a),x2=cx+r*Math.cos(b),y2=cy+r*Math.sin(b),large=sweep>Math.PI?1:0;svg+='<path class="slice" style="animation-delay:'+(i*.06)+'s" d="M '+cx+' '+cy+' L '+x1.toFixed(2)+' '+y1.toFixed(2)+' A '+r+' '+r+' 0 '+large+' 1 '+x2.toFixed(2)+' '+y2.toFixed(2)+' Z" fill="'+v.color+'" stroke="white" stroke-width="2"><title>'+escapeHtml(v.name)+': '+money(v.val)+' ('+(v.val/sum*100).toFixed(1)+'%)</title></path>';a=b;});svg+='<circle cx="'+cx+'" cy="'+cy+'" r="'+inner+'" fill="white"/>'+svgText(cx,cy-3,money(sum),'font-size="16" font-weight="750" fill="#202820" text-anchor="middle"')+svgText(cx,cy+16,'total spent','font-size="10" fill="#697469" text-anchor="middle"');}
+ vals.forEach((v,i)=>{const yy=22+i*35;svg+='<rect x="250" y="'+(yy-10)+'" width="11" height="11" rx="3" fill="'+v.color+'"/>'+svgText(267,yy,v.name,'font-size="10" fill="#536053"')+svgText(330,yy+14,money(v.val)+(sum?' · '+(v.val/sum*100).toFixed(0)+'%':''),'font-size="9" fill="#202820" text-anchor="end"');});
+ svg+='</svg>';$(targetId).innerHTML=svg;if(captionId)$(captionId).textContent=caption;
+}
+function compactMoney(n){if(n>=1000000)return '₱'+(n/1000000).toFixed(1)+'m';if(n>=10000)return '₱'+(n/1000).toFixed(0)+'k';if(n>=1000)return '₱'+(n/1000).toFixed(1)+'k';return '₱'+Math.round(n);}
+function miniDonut(targetId,filter,label){
+ const vals=fixedCats.map((name,i)=>({name,val:catSpend(filter,name),color:colors[i]}));const sum=vals.reduce((a,v)=>a+v.val,0),r=29,circ=2*Math.PI*r;let offset=0;
+ let svg='<svg viewBox="0 0 100 88" role="img" aria-label="'+escapeHtml(label)+': '+money(sum)+'" style="font-family:system-ui,sans-serif">';
+ svg+='<circle cx="50" cy="44" r="'+r+'" fill="none" stroke="#edf1ed" stroke-width="12"/>';
+ if(sum>0){vals.forEach((v,i)=>{if(v.val<=0)return;const dash=v.val/sum*circ;svg+='<circle class="mini-slice" style="animation-delay:'+(i*.05)+'s" cx="50" cy="44" r="'+r+'" fill="none" stroke="'+v.color+'" stroke-width="12" stroke-dasharray="'+dash.toFixed(2)+' '+(circ-dash).toFixed(2)+'" stroke-dashoffset="'+(-offset).toFixed(2)+'" transform="rotate(-90 50 44)"><title>'+escapeHtml(v.name)+': '+money(v.val)+' ('+(v.val/sum*100).toFixed(1)+'%)</title></circle>';offset+=dash;});}
+ svg+='<text x="50" y="42" text-anchor="middle" font-size="'+(compactMoney(sum).length>6?'9':'10')+'" font-weight="800" fill="#202820">'+escapeHtml(compactMoney(sum))+'</text><text x="50" y="53" text-anchor="middle" font-size="6.5" fill="#697469">spent</text></svg>';
+ $(targetId).innerHTML=svg;
+}
+function renderGraphs(){const date=$('dailyDate').value||state.dailyDate||'2026-11-01';state.dailyDate=date;const miniDate=$('dailyDateOverview');if(miniDate&&miniDate.value!==date)miniDate.value=date;const m=currentMonth();donutGraph('dailyGraph','dailyGraphCaption','Daily spending on '+date,t=>t.date===date);donutGraph('monthlyGraph','monthlyGraphCaption','Spending in '+m.label,t=>monthOf(t.date)===m.key);donutGraph('totalGraph',null,'Total spending across all six months',()=>true);miniDonut('miniDailyGraph',t=>t.date===date,'Daily spending');miniDonut('miniMonthlyGraph',t=>monthOf(t.date)===m.key,'Monthly spending');miniDonut('miniTotalGraph',()=>true,'Total spending');$('miniDailyCaption').textContent=date.slice(5);$('miniMonthlyCaption').textContent=m.label.replace(' 20','');}
+function render(){
+ const income=total(state.transactions.filter(isIncome)),spent=total(expenses()),balance=Number(config.startCash)+income-spent;
+ $('balance').textContent=money(balance);$('safe').textContent=money(balance-Number(config.reserve));$('safe').className='metric '+(balance<config.reserve?'red':'green');$('spent').textContent=money(spent);$('expenseCount').textContent=expenses().length+' expense'+(expenses().length===1?'':'s')+' logged';
+ const list=$('monthList');list.innerHTML='';months.forEach(m=>{const b=document.createElement('button');b.className='month'+(m.key===state.selected?' active':'');b.innerHTML='<strong>'+m.label+'</strong><span>'+money(spendMonth(m.key))+' spent · '+money(monthBudget(m))+' budget</span>';b.onclick=()=>{state.selected=m.key;save();render();};list.appendChild(b);});
+ const m=currentMonth(),spentM=spendMonth(m.key),budget=monthBudget(m);$('selectedTitle').textContent=m.label;$('monthTotal').textContent=money(spentM)+' spent';$('monthBudgetText').textContent='Planned budget: '+money(budget);$('monthRemaining').textContent=money(Math.abs(budget-spentM))+(spentM>budget?' over budget':' left');setBar('monthBar',spentM,budget);
+ $('categoryBreakdown').innerHTML=fixedCats.map(c=>{const n=catSpend(t=>monthOf(t.date)===m.key,c),lim=categoryBudget(m,c);return '<div class="category-row"><div class="split"><span>'+c+'</span><strong>'+money(n)+'</strong></div><div class="bar"><span style="width:'+Math.min(100,lim?n/lim*100:0)+'%;background:'+(lim&&n>lim?'#b53b3b':'')+'"></span></div><div class="small">'+(lim?'Budget '+money(lim):'No set limit')+' · '+money(n)+' spent</div></div>';}).join('');
+ $('budgetProgress').innerHTML=fixedCats.filter(c=>c!=='Other').map(c=>{const n=catSpend(t=>monthOf(t.date)===m.key,c),lim=categoryBudget(m,c);return '<div class="category-row"><div class="split"><span>'+c+'</span><strong>'+money(n)+' / '+money(lim)+'</strong></div><div class="bar"><span style="width:'+Math.min(100,lim?n/lim*100:0)+'%;background:'+(n>lim?'#b53b3b':'')+'"></span></div></div>';}).join('')+'<div class="split"><strong>Total monthly allocation</strong><strong>'+money(budget)+'</strong></div>';
+ const filter=$('filterMonth').value,rows=state.transactions.filter(t=>filter==='all'||monthOf(t.date)===filter).slice().sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id);$('txnRows').innerHTML=rows.map(t=>'<tr><td><strong>'+escapeHtml(t.date)+'</strong><br><span class="small">'+escapeHtml(t.note||(isIncome(t)?'Income received':'Expense'))+'</span></td><td>'+escapeHtml(t.category)+'</td><td class="'+(isIncome(t)?'green':'')+'">'+(isIncome(t)?'+':'−')+money(Number(t.amount))+'</td><td><button class="btn secondary" style="padding:5px 8px" data-del="'+t.id+'" aria-label="Delete transaction">×</button></td></tr>').join('');$('empty').classList.toggle('hidden',rows.length>0);
+ document.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{if(confirm('Delete this transaction?')){state.transactions=state.transactions.filter(t=>String(t.id)!==b.dataset.del);save();render();}});
+ renderGraphs();
+}
+function loadConfigFields(){const map={startCashInput:'startCash',reserveInput:'reserve',foodBudget:'food',electricBudget:'electricity',wifiBudget:'wifi',waterBudget:'water',miscBudget:'misc',decFoodBudget:'decFood',decMiscBudget:'decMisc'};Object.entries(map).forEach(([id,key])=>$(id).value=config[key]);}
+$('budgetForm').addEventListener('submit',e=>{e.preventDefault();const map={startCashInput:'startCash',reserveInput:'reserve',foodBudget:'food',electricBudget:'electricity',wifiBudget:'wifi',waterBudget:'water',miscBudget:'misc',decFoodBudget:'decFood',decMiscBudget:'decMisc'};for(const [id,key] of Object.entries(map)){const v=Number($(id).value);if(!Number.isFinite(v)||v<0){alert('Budget amounts must be zero or greater.');return;}config[key]=v;}save();render();alert('Your budget allocations have been saved.');});
+$('defaultBudgets').addEventListener('click',()=>{config={...defaults};loadConfigFields();save();render();});
+$('type').addEventListener('change',()=>{if($('type').value==='income')$('category').value='Other';});
+$('txnForm').addEventListener('submit',e=>{e.preventDefault();const amount=Number($('amount').value),date=$('date').value;if(!Number.isFinite(amount)||amount<=0){alert('Enter an amount greater than zero.');return;}if(date<'2026-11-01'||date>'2027-04-30'){alert('Choose a date between November 2026 and April 2027.');return;}const type=$('type').value;let category=$('category').value;if(type==='income')category='Income';state.transactions.push({id:Date.now(),type,amount,date,category,note:$('note').value.trim()});state.selected=monthOf(date);state.dailyDate=date;save();$('dailyDate').value=date;$('amount').value='';$('note').value='';render();});
+
+$('dailyDate').addEventListener('change',()=>{state.dailyDate=$('dailyDate').value;save();renderGraphs();});$('dailyDateOverview').addEventListener('change',()=>{$('dailyDate').value=$('dailyDateOverview').value;state.dailyDate=$('dailyDateOverview').value;save();renderGraphs();});$('filterMonth').addEventListener('change',render);
+$('exportBtn').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({version:2,exportedAt:new Date().toISOString(),config,state},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='my-dorm-budget-backup.json';a.click();URL.revokeObjectURL(a.href);});
+$('importBtn').addEventListener('click',()=>$('importFile').click());$('importFile').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text()),s=d.state||d;if(!Array.isArray(s.transactions))throw Error('Invalid backup');state={...state,...s};if(d.config)config={...defaults,...d.config};else if(s.config){config={...defaults,...s.config};delete config.expectedIncome;}save();loadConfigFields();$('dailyDate').value=state.dailyDate||'2026-11-01';render();alert('Backup restored.');}catch(err){alert('Could not restore that file. Please choose a backup exported from this tracker.');}e.target.value='';});
+$('resetBtn').addEventListener('click',()=>{if(confirm('This will delete all transactions saved in this browser. Export a backup first if you want to keep them. Continue?')){state={transactions:[],selected:'2026-11',received:false,dailyDate:'2026-11-01'};save();render();}});
+read();loadConfigFields();$('dailyDate').value=state.dailyDate||'2026-11-01';$('dailyDateOverview').value=state.dailyDate||'2026-11-01';render();
+})();
+</script>
+
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch((err) => {
+      console.warn("Offline support could not be registered yet.", err);
+    });
+  });
+}
+</script>
+
+</body>
+</html>
